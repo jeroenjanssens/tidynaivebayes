@@ -1,7 +1,10 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-tidynaivebayes
-==============
+
+# tidynaivebayes
 
 The `tidynaivebayes` package is a tidy implementation of the Naive Bayes classifier.
 
@@ -9,11 +12,12 @@ The `tidynaivebayes` package is a tidy implementation of the Naive Bayes classif
 
 You can install `tidynaivebayes` from GitHub with:
 
-``` r
+```R
 # install.packages("devtools")
 devtools::install_github("datascienceworkshops/tidynaivebayes")
 ```
 
+
 ### License
 
-The `tidynaivebayes` package is licensed under the GPLv3 (<http://www.gnu.org/licenses/gpl.html>).
+The `tidynaivebayes` package is licensed under the GPLv3 (http://www.gnu.org/licenses/gpl.html).

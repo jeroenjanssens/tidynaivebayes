@@ -1,0 +1,11 @@
+Package: tidynaivebayes
+Title: A tidy implementation of the Naive Bayes classifier
+Version: 0.0.0.9000
+Authors@R: person("Jeroen", "Janssens",
+                  email = "jeroen@datascienceworkshops.com",
+                  role = c("aut", "cre"))
+Description: A tidy implementation of the Naive Bayes classifier.
+Depends: R (>= 3.4.0)
+License: GPLv3
+Encoding: UTF-8
+LazyData: true
