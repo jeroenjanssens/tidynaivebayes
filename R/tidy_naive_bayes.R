@@ -1,8 +1,23 @@
+
+#' Tidy Naive Bayes Classifier
+#'
+#' @param x A data frame.
+#' @param y A vector.
+#' @param formula An object of class 'formula' of the form 'class ~ predictors'.
+#' @param data A data frame.
+#' @seealso [predict.tidy_naive_bayes()]
+#' @name tidy_naive_bayes
+#' @examples
+#' data(iris)
+#' model <- tidy_naive_bayes(Species ~ ., iris)
+NULL
+
 tidy_naive_bayes <- function(x, ...) {
   UseMethod("tidy_naive_bayes")
 }
 
-
+#' @rdname tidy_naive_bayes
+#' @export
 tidy_naive_bayes.default <- function(x, y) {
   class_column <- data_frame(class = y, id = row_number(class))
 
@@ -13,13 +28,13 @@ tidy_naive_bayes.default <- function(x, y) {
 
   stats <- data %>%
     group_by(class, feature) %>%
-    summarize(mu = mean(value),
+    summarise(mu = mean(value),
               sigma = var(value)) %>%
       ungroup()
 
   priors <- data %>%
     group_by(class) %>%
-    summarise(prior = n() / nrow(df))
+    summarise(prior = n() / nrow(data))
 
   structure(
     list(stats = stats, priors = priors),
@@ -28,6 +43,10 @@ tidy_naive_bayes.default <- function(x, y) {
 }
 
 
+
+
+#' @rdname tidy_naive_bayes
+#' @export
 tidy_naive_bayes.formula <- function(formula, data) {
   data <- model.frame(formula, data = data)
   class_var <- all.vars(formula[[2]])
@@ -39,19 +58,22 @@ tidy_naive_bayes.formula <- function(formula, data) {
 }
 
 
-predict.tidy_naive_bayes <- function(object, newdata = NULL, type = c("class", "prob")) {
+#' Predict method for Naive Bayes classifier models
+#'
+#' @export
+predict.tidy_naive_bayes <- function(model, newdata = NULL, type = c("class", "prob")) {
 
   type <- match.arg(type)
 
   newdata <- newdata %>%
     as_data_frame() %>%
-    select(unique(object$stats$feature)) %>%
+    select(unique(model$stats$feature)) %>%
     mutate(id = row_number()) %>%
     gather(key = feature, value = value, -id)
 
   likelihoods <-
     newdata %>%
-    inner_join(object$stats, by = "feature") %>%
+    inner_join(model$stats, by = "feature") %>%
     mutate(p = 1 / (sqrt(2 * pi * sigma)) * exp(-(value - mu)^2 / (2 * sigma)))
 
   likelihood <-
@@ -62,7 +84,7 @@ predict.tidy_naive_bayes <- function(object, newdata = NULL, type = c("class", "
 
   posteriors <-
     likelihood %>%
-    inner_join(object$priors, by = "class") %>%
+    inner_join(model$priors, by = "class") %>%
     mutate(posterior = prior * likelihood)
 
   # normalize
@@ -87,4 +109,14 @@ predict.tidy_naive_bayes <- function(object, newdata = NULL, type = c("class", "
       remove_rownames() %>%
       as.matrix()
   }
+}
+
+#' @rdname tidy_naive_bayes
+#' @export
+tidy_naive_bayes.tbl_df <- function(.data, class_var) {
+  class_var <- enquo(class_var)
+  x <- dplyr::select(.data, -!!class_var)
+  y <- dplyr::pull(.data, !!class_var)
+
+  tidy_naive_bayes.default(x, y)
 }

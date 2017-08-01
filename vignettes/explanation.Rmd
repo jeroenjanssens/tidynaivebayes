@@ -9,3 +9,237 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<!-- # https://en.wikipedia.org/wiki/Bayesian_inference -->
+
+
+
+<!-- ```{r, results="hide", message=FALSE, warning=FALSE} -->
+<!-- library(tidyverse) -->
+<!-- ``` -->
+
+<!-- ## Even tidier data -->
+
+<!-- Tidy data is  -->
+<!-- Each variable is a column -->
+<!-- Each observation is a row -->
+<!-- Each type of observational unit is a table -->
+
+<!-- In that sense, iris is already tidy. -->
+<!-- But we will go one step further, where each measurement because a row. -->
+<!-- This may seem odd at first.  -->
+<!-- Makes the use of the functions in dplyr and tidyr possible. -->
+<!-- Just like a data frame of tidy text, one token per row: -->
+
+<!-- ```{r} -->
+<!-- library(tidytext) -->
+<!-- library(janeaustenr) -->
+<!-- words <- austen_books() %>% -->
+<!--   unnest_tokens(word, text) %>% -->
+<!--   group_by(book, word) %>% -->
+<!--   summarize(n = n()) %>% -->
+<!--   ungroup() %>% -->
+<!--   bind_tf_idf(word, book, n) %>% -->
+<!--   select(book, word, tf_idf) %>% -->
+<!--   arrange(desc(tf_idf)) -->
+<!-- ``` -->
+
+<!-- ```{r, echo = FALSE} -->
+<!-- knitr::kable(head(words, 10), caption = "First ten rows of data frame `flowers`.") -->
+<!-- ``` -->
+
+
+
+<!-- From observations to a data frame of measurements -->
+
+<!-- ```{r} -->
+<!-- data(iris) -->
+<!-- flowers <- iris %>% -->
+<!--   as_data_frame() %>% -->
+<!--   janitor::clean_names() %>% -->
+<!--   rename(class = species) -->
+<!-- ``` -->
+
+<!-- ```{r, echo = FALSE} -->
+<!-- knitr::kable(head(iris, 5), caption = "First five rows of data frame `flowers`.") -->
+<!-- ``` -->
+
+
+<!-- ```{r, results="hide", message=FALSE, warning=FALSE} -->
+<!-- # Create tidy data set -->
+<!-- measurements <- iris %>% -->
+<!--   mutate(id = row_number()) %>% -->
+<!--   gather(key = feature, value = value, -id, -class) %>% -->
+<!--   select(id, feature, value, class) %>% -->
+<!--   arrange(id) -->
+<!-- ``` -->
+
+<!-- ```{r, echo = FALSE} -->
+<!-- knitr::kable(head(flower_measurements, 8), caption = "First eight rows of data frame `measurements`.") -->
+<!-- ``` -->
+
+
+
+
+
+
+
+<!-- ## Bayes theorem -->
+
+<!-- $$ p(\textrm{class} \mid \textrm{data}) = \frac{p(\textrm{data} \mid \textrm{class}) \times p(\textrm{class})}{p(\textrm{data})} $$ -->
+
+<!-- * $\textrm{class}$ is a particular class (e.g. setosa) -->
+<!-- * $\textrm{data}$ are the feature values of a data point  -->
+<!-- * $p(\textrm{class} \mid \textrm{data})$ is called the posterior -->
+<!-- * $p(\textrm{data}  \mid \textrm{class})$ is called the likelihood -->
+<!-- * $p(\textrm{class})$ is called the prior -->
+<!-- * $p(\textrm{data})$ is called the marginal probability -->
+
+<!-- ## Naive Bayes classifier -->
+
+<!-- $$ p(data \mid \textrm{setosa}) = p(\textrm{setosa}) \\ \times p(\textrm{sepal_length} \mid \textrm{setosa}) \times p(\textrm{sepal_width} \mid \textrm{setosa}) \\ \times p(\textrm{petal_length} \mid \textrm{setosa}) \times p(\textrm{petal_width} \mid \textrm{setosa}) $$  -->
+
+<!-- * Features are independent -->
+<!-- * Denominator is ignored -->
+<!-- * One equation per class -->
+<!-- * Maximum numerator postorior is important -->
+
+<!-- ## Visualize features -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- ggplot(df, aes(value, fill = class)) + -->
+<!--   geom_density(alpha = 0.6) + -->
+<!--   facet_grid(feature ~ ., scales = "free_y") -->
+<!-- ``` -->
+
+
+<!-- ## Gaussian Naive Bayes -->
+
+<!-- $$p(x=v \mid c)=\frac{1}{\sqrt{2\pi\sigma^2_c}}\,e^{ -\frac{(v-\mu_c)^2}{2\sigma^2_c} }$$ -->
+
+<!-- ```{r} -->
+<!-- values <- c(1, 3, 2, 3, 2, 3, 1, 4) -->
+<!-- v <- 4.1 -->
+<!-- 1 / (sqrt(2 * pi * var(values))) * exp(-(v - mean(values))^2 / (2 * var(values))) -->
+<!-- v <- 2.5 -->
+<!-- 1 / (sqrt(2 * pi * var(values))) * exp(-(v - mean(values))^2 / (2 * var(values))) -->
+<!-- ``` -->
+
+<!-- ## Compute $\mu$ and $\sigma$ from training data -->
+
+<!-- ```{r} -->
+<!-- # Split the data -->
+<!-- train_ids <- data_frame(id = sample(max(df$id), max(df$id) * 0.8)) -->
+<!-- head(train_ids, 3) -->
+<!-- df_train <- semi_join(df, train_ids, by = "id") -->
+<!-- df_test <- anti_join(df, train_ids, by = "id") -->
+
+<!-- # Compute mean and variance for each species and each feature -->
+<!-- stats <- df_train %>% -->
+<!--   group_by(class, feature) %>% -->
+<!--   summarize(average = mean(value), variance = var(value)) %>% -->
+<!--   ungroup() -->
+<!-- ``` -->
+
+
+<!-- ## Compute $\mu$ and $\sigma$ from training data -->
+
+<!-- ```{r, echo = FALSE} -->
+<!-- knitr::kable(head(stats)) -->
+<!-- ``` -->
+
+
+<!-- ## Visualize transformed values with test point -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- crossing(feature = unique(df$feature), value = seq(0, 8, by = 0.01)) %>% -->
+<!--   inner_join(stats, by = "feature") %>% -->
+<!--   mutate(p = 1 / (sqrt(2 * pi * variance)) * exp((-(value - average)^2) / (2 * variance))) %>% -->
+<!--   ggplot(aes(value, p, fill = class)) + geom_density(stat = "identity", alpha = 0.6) + -->
+<!--   geom_point(data = test_point, aes(value), y = 0) + facet_grid(feature ~ .) -->
+<!-- test_point <- filter(df, id == min(df_test$id)) -->
+<!-- ``` -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- test_point <- filter(df, id == min(df_test$id)) -->
+<!-- knitr::kable(test_point) -->
+<!-- ``` -->
+
+<!-- ## Visualize transformed values with test point -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- test_point <- filter(df, id == min(df_test$id)) -->
+<!-- crossing(feature = unique(df$feature), -->
+<!--          value = seq(0, 8, by = 0.01)) %>% -->
+<!--   inner_join(stats, by = "feature") %>% -->
+<!--   mutate(p = 1 / (sqrt(2 * pi * variance)) * exp((-(value - average)^2) / (2 * variance))) %>% -->
+<!--   ggplot(aes(value, p, fill = class)) + -->
+<!--   geom_density(stat = "identity", alpha = 0.6) + -->
+<!--   geom_point(data = test_point, aes(value), y = 0) + -->
+<!--   facet_grid(feature ~ .) -->
+<!-- ``` -->
+
+<!-- ## Compute likelihoods of test data -->
+
+<!-- ```{r} -->
+<!-- likelihoods <- df_test %>% select(-class) %>% -->
+<!--   inner_join(stats, by = "feature") %>% -->
+<!--   mutate(p = 1 / (sqrt(2 * pi * variance)) * exp((-(value - average)^2) / (2 * variance))) -->
+<!-- filter(likelihoods, id == min(df_test$id)) -->
+<!-- ``` -->
+
+
+<!-- ## Compute total likelihood -->
+
+<!-- ```{r} -->
+<!-- likelihood <- -->
+<!--   likelihoods %>% -->
+<!--   group_by(id, class) %>% -->
+<!--   summarise(likelihood = prod(p)) %>% -->
+<!--   ungroup() -->
+
+<!-- head(likelihood, n = 6) -->
+<!-- ``` -->
+
+<!-- ## Compute priors $p(\textrm{class})$ -->
+
+<!-- ```{r} -->
+<!-- priors <- df_train %>% -->
+<!--   group_by(class) %>% -->
+<!--   summarise(prior = n() / nrow(df_train)) -->
+<!-- ``` -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- knitr::kable(priors) -->
+<!-- ``` -->
+
+<!-- ## Compute unnormalized posterior -->
+
+<!-- ```{r} -->
+<!-- posteriors <- -->
+<!--   likelihood %>% -->
+<!--   inner_join(priors, by = "class") %>% -->
+<!--   mutate(posterior = prior * likelihood) -->
+
+<!-- head(posteriors, n = 6) -->
+<!-- ``` -->
+
+
+<!-- ## Select for each id the class with highest posterior -->
+
+<!-- ```{r} -->
+<!-- predictions <- -->
+<!--   posteriors %>% -->
+<!--   arrange(desc(posterior)) %>% -->
+<!--   group_by(id) %>% -->
+<!--   summarize(prediction = first(class), -->
+<!--             posterior = first(posterior)) -->
+
+<!-- sample_n(predictions, 6) -->
+<!-- ``` -->
+
+<!-- ## In summary, Naive Bayes -->
+
+<!-- * Works with missing data -->
+<!-- * Supports more than two classes -->
+<!-- * Has no parameters -->
+
