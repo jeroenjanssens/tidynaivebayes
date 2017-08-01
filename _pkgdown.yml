@@ -4,3 +4,22 @@ authors:
   Data Science Workshops:
     href: https://www.datascienceworkshops.com
     html: "<img src='https://datascienceworkshops.github.io/tidynaivebayes/data-science-workshops.svg' height='50px' style='vertical-align: baseline; margin-bottom: -7px' />"
+
+template:
+  params:
+    bootswatch: cosmo
+
+navbar:
+  title: "tidynaivebayes"
+  type: inverse
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Explanation"
+      href: articles/explanation.html
+    - text: "Reference"
+      href: reference/index.html
+  right:
+   - icon: fa-github
+     href: https://github.com/datascienceworkshops/tidynaivebayes
+

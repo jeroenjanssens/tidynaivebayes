@@ -1,0 +1,11 @@
+---
+title: "A tidy explanation of the Naive Bayes classifier"
+author: "Jeroen Janssens"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
