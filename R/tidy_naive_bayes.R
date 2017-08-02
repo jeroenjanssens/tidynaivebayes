@@ -1,4 +1,4 @@
-#' Tidy Naive Bayes Classifier
+#' Train a Tidy Naive Bayes classifier model
 #'
 #' @import dplyr
 #' @import tidyr
@@ -8,7 +8,7 @@
 #' @param formula An object of class 'formula' of the form 'class ~ predictors'.
 #' @param data A data frame.
 #' @return A Tidy Naive Bayes classifier model.
-#' @seealso \code{\link{predict.tidy_naive_bayes}}
+#' @seealso [predict.tidy_naive_bayes()]
 #' @name tidy_naive_bayes
 #' @examples
 #' library(tibble)
@@ -16,18 +16,20 @@
 #' model <- tidy_naive_bayes(Species ~ ., iris)
 #'
 #' new_flowers <- tribble(
-#' ~Sepal.Length, ~Sepal.Width, ~Petal.Length, ~Petal.Width,
-#'           5.3,          3.4,           1.6,          0.3,
-#'           7.7,          3.9,           6.3,          2.1
+#'   ~Sepal.Length, ~Sepal.Width, ~Petal.Length, ~Petal.Width,
+#'             5.3,          3.4,           1.6,          0.3,
+#'             7.7,          3.9,           6.3,          2.1
 #' )
 #'
 #' predict(model, new_flowers)
 #' predict(model, new_flowers, type = "prob")
 NULL
 
+
 tidy_naive_bayes <- function(x, ...) {
   UseMethod("tidy_naive_bayes")
 }
+
 
 #' @rdname tidy_naive_bayes
 #' @export
@@ -56,8 +58,6 @@ tidy_naive_bayes.default <- function(x, y) {
 }
 
 
-
-
 #' @rdname tidy_naive_bayes
 #' @export
 tidy_naive_bayes.formula <- function(formula, data) {
@@ -71,7 +71,18 @@ tidy_naive_bayes.formula <- function(formula, data) {
 }
 
 
-#' Predict method for Tidy Naive Bayes classifier models
+#' @rdname tidy_naive_bayes
+#' @export
+tidy_naive_bayes.tbl_df <- function(.data, class_var) {
+  class_var <- enquo(class_var)
+  x <- select(.data, -!!class_var)
+  y <- pull(.data, !!class_var)
+
+  tidy_naive_bayes.default(x, y)
+}
+
+
+#' Predict class of new data using a Tidy Naive Bayes classifier model
 #'
 #' @export
 predict.tidy_naive_bayes <- function(model, newdata = NULL, type = c("class", "prob")) {
@@ -122,14 +133,4 @@ predict.tidy_naive_bayes <- function(model, newdata = NULL, type = c("class", "p
       remove_rownames() %>%
       as.matrix()
   }
-}
-
-#' @rdname tidy_naive_bayes
-#' @export
-tidy_naive_bayes.tbl_df <- function(.data, class_var) {
-  class_var <- enquo(class_var)
-  x <- select(.data, -!!class_var)
-  y <- pull(.data, !!class_var)
-
-  tidy_naive_bayes.default(x, y)
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tidy Naive Bayes Classifier — tidy_naive_bayes • tidynaivebayes</title>
+<title>Train a Tidy Naive Bayes classifier model — tidy_naive_bayes • tidynaivebayes</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,11 +80,11 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tidy Naive Bayes Classifier</h1>
+    <h1>Train a Tidy Naive Bayes classifier model</h1>
     </div>
 
     
-    <p>Tidy Naive Bayes Classifier</p>
+    <p>Train a Tidy Naive Bayes classifier model</p>
     
 
     <pre class="usage"><span class='co'># S3 method for default</span>
@@ -123,7 +123,7 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='predict.tidy_naive_bayes.html'>predict.tidy_naive_bayes</a></code></p>
+    <p><code><a href='predict.tidy_naive_bayes.html'>predict.tidy_naive_bayes()</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -132,9 +132,9 @@
 <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'>tidy_naive_bayes</span>(<span class='no'>Species</span> ~ <span class='no'>.</span>, <span class='no'>iris</span>)
 
 <span class='no'>new_flowers</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/tribble'>tribble</a></span>(
-~<span class='no'>Sepal.Length</span>, ~<span class='no'>Sepal.Width</span>, ~<span class='no'>Petal.Length</span>, ~<span class='no'>Petal.Width</span>,
-          <span class='fl'>5.3</span>,          <span class='fl'>3.4</span>,           <span class='fl'>1.6</span>,          <span class='fl'>0.3</span>,
-          <span class='fl'>7.7</span>,          <span class='fl'>3.9</span>,           <span class='fl'>6.3</span>,          <span class='fl'>2.1</span>
+  ~<span class='no'>Sepal.Length</span>, ~<span class='no'>Sepal.Width</span>, ~<span class='no'>Petal.Length</span>, ~<span class='no'>Petal.Width</span>,
+            <span class='fl'>5.3</span>,          <span class='fl'>3.4</span>,           <span class='fl'>1.6</span>,          <span class='fl'>0.3</span>,
+            <span class='fl'>7.7</span>,          <span class='fl'>3.9</span>,           <span class='fl'>6.3</span>,          <span class='fl'>2.1</span>
 )
 
 <span class='fu'>predict</span>(<span class='no'>model</span>, <span class='no'>new_flowers</span>)</div><div class='output co'>#&gt; [1] setosa    virginica

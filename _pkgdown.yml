@@ -23,3 +23,11 @@ navbar:
    - icon: fa-github fa-lg
      href: https://github.com/datascienceworkshops/tidynaivebayes
 
+reference:
+  - title: Train
+    contents:
+      - tidy_naive_bayes
+  - title: Predict
+    contents:
+      - predict.tidy_naive_bayes
+

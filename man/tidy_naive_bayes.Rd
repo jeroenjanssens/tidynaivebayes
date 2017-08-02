@@ -5,7 +5,7 @@
 \alias{tidy_naive_bayes.default}
 \alias{tidy_naive_bayes.formula}
 \alias{tidy_naive_bayes.tbl_df}
-\title{Tidy Naive Bayes Classifier}
+\title{Train a Tidy Naive Bayes classifier model}
 \usage{
 \method{tidy_naive_bayes}{default}(x, y)
 
@@ -26,7 +26,7 @@
 A Tidy Naive Bayes classifier model.
 }
 \description{
-Tidy Naive Bayes Classifier
+Train a Tidy Naive Bayes classifier model
 }
 \examples{
 library(tibble)
@@ -34,14 +34,14 @@ data(iris)
 model <- tidy_naive_bayes(Species ~ ., iris)
 
 new_flowers <- tribble(
-~Sepal.Length, ~Sepal.Width, ~Petal.Length, ~Petal.Width,
-          5.3,          3.4,           1.6,          0.3,
-          7.7,          3.9,           6.3,          2.1
+  ~Sepal.Length, ~Sepal.Width, ~Petal.Length, ~Petal.Width,
+            5.3,          3.4,           1.6,          0.3,
+            7.7,          3.9,           6.3,          2.1
 )
 
 predict(model, new_flowers)
 predict(model, new_flowers, type = "prob")
 }
 \seealso{
-\code{\link{predict.tidy_naive_bayes}}
+\code{\link[=predict.tidy_naive_bayes]{predict.tidy_naive_bayes()}}
 }
