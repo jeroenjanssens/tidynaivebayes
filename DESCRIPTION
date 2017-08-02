@@ -6,6 +6,8 @@ Authors@R: c(
     person("Data Science Workshops", role = c("cph", "fnd"))
     )
 Description: A tidy implementation of the Naive Bayes classifier.
+URL: https://github.com/datascienceworkshops/tidynaivebayes
+BugReports: https://github.com/datascienceworkshops/tidynaivebayes/issues
 Depends: R (>= 3.4.0)
 License: GPLv3
 Encoding: UTF-8
