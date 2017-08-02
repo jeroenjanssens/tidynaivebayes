@@ -2,11 +2,11 @@
 % Please edit documentation in R/tidy_naive_bayes.R
 \name{predict.tidy_naive_bayes}
 \alias{predict.tidy_naive_bayes}
-\title{Predict method for Naive Bayes classifier models}
+\title{Predict method for Tidy Naive Bayes classifier models}
 \usage{
 \method{predict}{tidy_naive_bayes}(model, newdata = NULL, type = c("class",
   "prob"))
 }
 \description{
-Predict method for Naive Bayes classifier models
+Predict method for Tidy Naive Bayes classifier models
 }

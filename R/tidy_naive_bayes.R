@@ -1,15 +1,28 @@
-
 #' Tidy Naive Bayes Classifier
+#'
+#' @import dplyr
+#' @import tidyr
 #'
 #' @param x A data frame.
 #' @param y A vector.
 #' @param formula An object of class 'formula' of the form 'class ~ predictors'.
 #' @param data A data frame.
-#' @seealso [predict.tidy_naive_bayes()]
+#' @return A Tidy Naive Bayes classifier model.
+#' @seealso \code{\link{predict.tidy_naive_bayes}}
 #' @name tidy_naive_bayes
 #' @examples
+#' library(tibble)
 #' data(iris)
 #' model <- tidy_naive_bayes(Species ~ ., iris)
+#'
+#' new_flowers <- tribble(
+#' ~Sepal.Length, ~Sepal.Width, ~Petal.Length, ~Petal.Width,
+#'           5.3,          3.4,           1.6,          0.3,
+#'           7.7,          3.9,           6.3,          2.1
+#' )
+#'
+#' predict(model, new_flowers)
+#' predict(model, new_flowers, type = "prob")
 NULL
 
 tidy_naive_bayes <- function(x, ...) {
@@ -51,14 +64,14 @@ tidy_naive_bayes.formula <- function(formula, data) {
   data <- model.frame(formula, data = data)
   class_var <- all.vars(formula[[2]])
 
-  x <- dplyr::select(data, -.data[[class_var]])
-  y <- dplyr::pull(data, .data[[class_var]])
+  x <- select(data, -.data[[class_var]])
+  y <- pull(data, .data[[class_var]])
 
   tidy_naive_bayes.default(x, y)
 }
 
 
-#' Predict method for Naive Bayes classifier models
+#' Predict method for Tidy Naive Bayes classifier models
 #'
 #' @export
 predict.tidy_naive_bayes <- function(model, newdata = NULL, type = c("class", "prob")) {
@@ -115,8 +128,8 @@ predict.tidy_naive_bayes <- function(model, newdata = NULL, type = c("class", "p
 #' @export
 tidy_naive_bayes.tbl_df <- function(.data, class_var) {
   class_var <- enquo(class_var)
-  x <- dplyr::select(.data, -!!class_var)
-  y <- dplyr::pull(.data, !!class_var)
+  x <- select(.data, -!!class_var)
+  y <- pull(.data, !!class_var)
 
   tidy_naive_bayes.default(x, y)
 }
