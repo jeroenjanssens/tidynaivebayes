@@ -3,7 +3,7 @@ authors:
     href: http://jeroenjanssens.com
   Data Science Workshops:
     href: https://www.datascienceworkshops.com
-    html: "<img src='https://datascienceworkshops.github.io/tidynaivebayes/data-science-workshops.svg' height='50px' style='vertical-align: baseline; margin-bottom: -7px' />"
+    html: <img class="data-science-workshops-logo" src="https://datascienceworkshops.github.io/tidynaivebayes/data-science-workshops.svg"/>
 
 template:
   params:
@@ -20,6 +20,6 @@ navbar:
     - text: "Reference"
       href: reference/index.html
   right:
-   - icon: fa-github
+   - icon: fa-github fa-lg
      href: https://github.com/datascienceworkshops/tidynaivebayes
 
